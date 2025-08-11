@@ -14,6 +14,8 @@ const nextConfig = {
   experimental: {
     // Desativar build traces que causam o erro
     buildTraces: false,
+    // Outras opções experimentais seguras
+    optimizePackageImports: ['lucide-react'],
   },
 }
 
