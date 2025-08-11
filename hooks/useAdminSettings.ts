@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAdminSettings, getContactSettings, defaultAdminSettings, defaultContactSettings, TeamMember } from '@/data/adminConfig';
+import { defaultAdminSettings, defaultContactSettings, TeamMember } from '@/data/adminConfig';
 
 export const useAdminSettings = () => {
   const [adminSettings, setAdminSettings] = useState(defaultAdminSettings);
