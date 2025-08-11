@@ -23,5 +23,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", ".next", ".vercel", "dist", "build"]
+  "exclude": ["node_modules", ".next", ".vercel", "dist", "build", ".next/types", ".next/cache"]
 }

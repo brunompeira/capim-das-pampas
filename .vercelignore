@@ -1,5 +1,8 @@
 .next
+.next/types
+.next/cache
 node_modules
 *.log
 .env.local
 .env.production
+.env
