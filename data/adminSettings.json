@@ -1,0 +1,155 @@
+{
+  "siteSettings": {
+    "name": "Capim das Pampas",
+    "email": "capimdaspampas@gmail.com",
+    "phone": "+351 912 345 111",
+    "whatsapp": "+351 912 345 111",
+    "address": "Rua das Flores, 123 - 1000-001 Lisboa, Portugal",
+    "openingHours": {
+      "monday": {
+        "open": "08:00",
+        "close": "18:00",
+        "closed": false
+      },
+      "tuesday": {
+        "open": "08:00",
+        "close": "18:00",
+        "closed": false
+      },
+      "wednesday": {
+        "open": "08:00",
+        "close": "18:00",
+        "closed": false
+      },
+      "thursday": {
+        "open": "08:00",
+        "close": "18:00",
+        "closed": false
+      },
+      "friday": {
+        "open": "08:00",
+        "close": "18:00",
+        "closed": false
+      },
+      "saturday": {
+        "open": "08:00",
+        "close": "16:00",
+        "closed": false
+      },
+      "sunday": {
+        "open": "10:00",
+        "close": "16:00",
+        "closed": true
+      }
+    },
+    "team": [
+      {
+        "id": "1",
+        "name": "Daniela Martins",
+        "photo": ""
+      },
+      {
+        "id": "2",
+        "name": "Rui Loureiro",
+        "photo": ""
+      }
+    ]
+  },
+  "contactSettings": {
+    "addresses": [
+      {
+        "id": "1",
+        "name": "Loja Nogueira",
+        "address": "Rua da Igreja 26, 4715-196 Nogueira, Braga",
+        "openingHours": {
+          "monday": {
+            "open": "08:00",
+            "close": "18:00",
+            "closed": false
+          },
+          "tuesday": {
+            "open": "08:00",
+            "close": "18:00",
+            "closed": false
+          },
+          "wednesday": {
+            "open": "08:00",
+            "close": "18:00",
+            "closed": false
+          },
+          "thursday": {
+            "open": "08:00",
+            "close": "18:00",
+            "closed": false
+          },
+          "friday": {
+            "open": "08:00",
+            "close": "18:00",
+            "closed": false
+          },
+          "saturday": {
+            "open": "08:00",
+            "close": "16:00",
+            "closed": false
+          },
+          "sunday": {
+            "open": "10:00",
+            "close": "16:00",
+            "closed": false
+          }
+        },
+        "coordinates": [
+          41.5376,
+          -8.4102
+        ]
+      },
+      {
+        "id": "1754581315318",
+        "name": "Loja Nova Arcada",
+        "address": "Avenida de Lamas 100, 4700-068 Braga",
+        "openingHours": {
+          "monday": {
+            "open": "08:00",
+            "close": "18:00",
+            "closed": true
+          },
+          "tuesday": {
+            "open": "08:00",
+            "close": "18:00",
+            "closed": true
+          },
+          "wednesday": {
+            "open": "08:00",
+            "close": "18:00",
+            "closed": true
+          },
+          "thursday": {
+            "open": "08:00",
+            "close": "18:00",
+            "closed": true
+          },
+          "friday": {
+            "open": "08:00",
+            "close": "18:00",
+            "closed": true
+          },
+          "saturday": {
+            "open": "08:00",
+            "close": "16:00",
+            "closed": false
+          },
+          "sunday": {
+            "open": "08:00",
+            "close": "16:00",
+            "closed": false
+          }
+        },
+        "coordinates": [
+          41.5792,
+          -8.4288
+        ]
+      }
+    ]
+  },
+  "lastUpdated": "2025-08-10T17:41:46.862Z"
+}
