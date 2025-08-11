@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
   images: {
     domains: ['localhost'],
   },
@@ -13,9 +10,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Desativar build traces que causam o erro
+  // Desativar funcionalidades problemáticas
   experimental: {
-    appDir: true,
+    // Desativar build traces que causam o erro
     buildTraces: false,
   },
 }
