@@ -86,47 +86,5 @@ export const defaultContactSettings: AdminContactSettings = {
   ]
 };
 
-// Função para obter as configurações salvas do ficheiro JSON
-export const getAdminSettings = async (): Promise<AdminSiteSettings> => {
-  try {
-    const response = await fetch('/api/admin/settings', {
-      cache: 'no-store',
-      headers: {
-        'Cache-Control': 'no-cache'
-      }
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      return data.siteSettings || defaultAdminSettings;
-    } else {
-      console.error('Erro na resposta:', response.status, response.statusText);
-    }
-  } catch (error) {
-    console.error('Erro ao carregar configurações:', error);
-  }
-  
-  return defaultAdminSettings;
-};
-
-export const getContactSettings = async (): Promise<AdminContactSettings> => {
-  try {
-    const response = await fetch('/api/admin/settings', {
-      cache: 'no-store',
-      headers: {
-        'Cache-Control': 'no-cache'
-      }
-    });
-    
-    if (response.ok) {
-      const data = await response.json();
-      return data.contactSettings || defaultContactSettings;
-    } else {
-      console.error('Erro na resposta:', response.status, response.statusText);
-    }
-  } catch (error) {
-    console.error('Erro ao carregar configurações de contacto:', error);
-  }
-  
-  return defaultContactSettings;
-};
+// Funções removidas para resolver erro de build
+// As configurações são carregadas diretamente nos componentes
