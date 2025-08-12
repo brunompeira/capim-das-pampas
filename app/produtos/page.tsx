@@ -50,7 +50,7 @@ export default function ProductsPage() {
       
       {/* Page Header */}
       <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-4 py-8 text-center lg:text-left">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Os Nossos Produtos</h1>
           <p className="text-gray-600">Descubra a nossa selecção de flores e cerâmica artesanal</p>
         </div>

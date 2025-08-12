@@ -47,9 +47,9 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
       
       <div className="p-5">
         <Link href={`/produto/${product.id}`} className="block">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2 hover:text-primary-600 transition-colors duration-200">{product.name}</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2 hover:text-primary-600 transition-colors duration-200 text-center lg:text-left">{product.name}</h3>
         </Link>
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2 text-center lg:text-left">{product.description}</p>
         
                   <div className="flex items-center justify-between">
             <span className="text-xl font-bold text-primary-600">
@@ -89,7 +89,7 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
             </div>
           </div>
         
-        <div className="mt-3">
+        <div className="mt-3 text-center lg:text-left">
           <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
             product.category === 'flores' 
               ? 'bg-pink-100 text-pink-800' 

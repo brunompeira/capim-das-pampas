@@ -13,11 +13,11 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Company Info */}
-          <div>
+          <div className="text-center lg:text-left">
             <h3 className="text-xl font-bold mb-4">{siteConfig.name}</h3>
             <p className="text-gray-300 mb-4">{siteConfig.description}</p>
-            <div className="flex space-x-4">
-              {siteConfig.contact.instagram && (
+                         <div className="flex justify-center lg:justify-start space-x-4">
+               {siteConfig.contact.instagram && (
                 <a
                   href={`https://instagram.com/${siteConfig.contact.instagram.replace('@', '')}`}
                   className="text-gray-300 hover:text-white transition-colors"
@@ -41,7 +41,7 @@ export default function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div className="text-center lg:text-left">
             <h3 className="text-lg font-semibold mb-4">Links Rápidos</h3>
             <ul className="space-y-2">
               <li>
@@ -68,11 +68,11 @@ export default function Footer() {
           </div>
 
           {/* Contact Info */}
-          <div>
+          <div className="text-center lg:text-left">
             <h3 className="text-lg font-semibold mb-4">Contacto</h3>
             <div className="space-y-3">
-              <div className="flex items-center">
-                <Phone className="w-4 h-4 mr-2 text-gray-300" />
+                             <div className="flex justify-center lg:justify-start items-center">
+                 <Phone className="w-4 h-4 mr-2 text-gray-300" />
                 {isLoading ? (
                   <div className="animate-pulse bg-gray-700 h-4 w-32 rounded"></div>
                 ) : (
@@ -84,8 +84,8 @@ export default function Footer() {
                   </a>
                 )}
               </div>
-              <div className="flex items-center">
-                <Mail className="w-4 h-4 mr-2 text-gray-300" />
+                             <div className="flex justify-center lg:justify-start items-center">
+                 <Mail className="w-4 h-4 mr-2 text-gray-300" />
                 {isLoading ? (
                   <div className="animate-pulse bg-gray-700 h-4 w-40 rounded"></div>
                 ) : (
@@ -98,7 +98,7 @@ export default function Footer() {
                 )}
               </div>
               {isLoading ? (
-                <div className="flex items-start">
+                <div className="flex justify-center lg:justify-start items-start">
                   <MapPin className="w-4 h-4 mr-2 mt-1 text-gray-300" />
                   <div className="animate-pulse bg-gray-700 h-4 w-48 rounded"></div>
                 </div>
@@ -107,33 +107,33 @@ export default function Footer() {
                   // Mostrar todos os endereços
                   <div className="space-y-2">
                     {contactSettings.addresses.map((address, index) => (
-                      <div key={address.id} className="flex items-start">
+                      <div key={address.id} className="flex justify-center lg:justify-start items-start">
                         <MapPin className="w-4 h-4 mr-2 mt-1 text-gray-300" />
-                        <a
-                          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address.address)}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-300 hover:text-white transition-colors cursor-pointer"
-                          title="Abrir no Google Maps"
-                        >
-                          {address.address}
-                        </a>
+                                                 <a
+                           href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address.address)}`}
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           className="text-sm lg:text-base text-gray-300 hover:text-white transition-colors cursor-pointer"
+                           title="Abrir no Google Maps"
+                         >
+                           {address.address}
+                         </a>
                       </div>
                     ))}
                   </div>
                 ) : (
                   // Fallback para o endereço padrão
-                  <div className="flex items-start">
+                  <div className="flex justify-center lg:justify-start items-start">
                     <MapPin className="w-4 h-4 mr-2 mt-1 text-gray-300" />
-                    <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adminSettings.address)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-300 hover:text-white transition-colors cursor-pointer"
-                      title="Abrir no Google Maps"
-                    >
-                      {adminSettings.address}
-                    </a>
+                                         <a
+                       href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(adminSettings.address)}`}
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       className="text-sm lg:text-base text-gray-300 hover:text-white transition-colors cursor-pointer"
+                       title="Abrir no Google Maps"
+                     >
+                       {adminSettings.address}
+                     </a>
                   </div>
                 )
               )}
