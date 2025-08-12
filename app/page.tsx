@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Product } from '@/types';
 import { siteConfig } from '@/data/siteConfig';
 import { useAdminSettings } from '@/hooks/useAdminSettings';
@@ -13,21 +14,36 @@ import { useFavorites } from '@/contexts/FavoritesContext';
 import { Flower, Heart, Phone, MapPin, Mail } from 'lucide-react';
 
 export default function Home() {
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const { favoriteProducts, removeFromFavorites } = useFavorites();
   const { adminSettings, contactSettings, isLoading } = useAdminSettings();
 
-  // Redirecionamento automático para página de construção
+  // Verificar se o site está em construção
   useEffect(() => {
-    window.location.href = '/construcao';
-  }, []);
+    const checkConstructionMode = async () => {
+      try {
+        const response = await fetch('/api/construction-status');
+        if (response.ok) {
+          const { isUnderConstruction } = await response.json();
+          if (isUnderConstruction) {
+            router.push('/construcao');
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao verificar status de construção:', error);
+      }
+    };
+
+    checkConstructionMode();
+  }, [router]);
 
   // Carregar produtos da API
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        const response = await fetch('/api/products');
+        const response = await fetch('/api/admin/products');
         if (response.ok) {
           const productsData = await response.json();
           setProducts(productsData);
@@ -109,7 +125,7 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto justify-center">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -145,7 +161,7 @@ export default function Home() {
             <div className="relative">
               <div className="bg-gray-50 rounded-2xl h-80 flex items-center justify-center p-8">
                 <img 
-                  src="/images/logo/logo.jpg" 
+                  src="/images/about/about.jpg" 
                   alt={`${siteConfig.name} Logo`}
                   className="h-64 w-auto object-contain"
                 />
@@ -207,9 +223,16 @@ export default function Home() {
                  contactSettings.addresses.length > 0 ? (
                    <div className="space-y-2">
                      {contactSettings.addresses.map((address, index) => (
-                       <p key={address.id} className="text-gray-600 text-sm">
+                       <a
+                         key={address.id}
+                         href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address.address)}`}
+                         target="_blank"
+                         rel="noopener noreferrer"
+                         className="text-gray-600 hover:text-primary-600 text-sm cursor-pointer transition-colors block"
+                         title="Clique para abrir no Google Maps"
+                       >
                          {address.address}
-                       </p>
+                       </a>
                      ))}
                    </div>
                  ) : (

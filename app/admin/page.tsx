@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { products } from '@/data/products';
 import { Product } from '@/types';
 import { Plus, Edit, Trash2, Eye, Save, X, Settings, Package, LogOut } from 'lucide-react';
 import { siteConfig } from '@/data/siteConfig';
@@ -11,7 +10,7 @@ import { useRouter } from 'next/navigation';
 export default function AdminPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'products' | 'settings'>('products');
-  const [productList, setProductList] = useState<Product[]>(products);
+  const [productList, setProductList] = useState<Product[]>([]);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isAddingProduct, setIsAddingProduct] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -142,46 +141,319 @@ export default function AdminPage() {
     }
   };
 
-  const handleSave = (product: Product) => {
-    const updatedProducts = productList.map(p => p.id === product.id ? product : p);
-    setProductList(updatedProducts);
-    setEditingProduct(null);
-    saveProductsToFile(updatedProducts);
-  };
-
-  const handleDelete = (productId: string) => {
-    if (confirm('Tem certeza que deseja excluir este produto?')) {
-      const updatedProducts = productList.filter(p => p.id !== productId);
+  const handleSave = async (product: Product) => {
+    try {
+      const updatedProducts = productList.map(p => p.id === product.id ? product : p);
       setProductList(updatedProducts);
-      saveProductsToFile(updatedProducts);
+      setEditingProduct(null);
+      
+      // Converter produtos para formato MongoDB CORRETO
+      const productsForMongo = updatedProducts.map(p => {
+        // Se for o produto editado, usar a imagem atualizada
+        const productImage = p.id === product.id ? product.image : p.image;
+        
+        return {
+          name: p.name,
+          description: p.description,
+          price: p.price,
+          category: p.category,
+          images: productImage && productImage !== '/images/placeholder.jpg' 
+            ? [{
+                url: productImage,
+                alt: p.name,
+                publicId: `capim-${p.id}`
+              }]
+            : [],
+          inStock: p.available,
+          featured: p.featured,
+          tags: [],
+          specifications: {
+            dimensions: '',
+            material: '',
+            weight: '',
+            care: ''
+          }
+        };
+      });
+      
+      console.log('🔍 Produtos para MongoDB:', productsForMongo);
+      console.log('🔍 Produto editado:', product);
+      console.log('🔍 Imagem do produto editado:', product.image);
+      console.log('🔍 Produto 0 images:', productsForMongo[0]?.images);
+      console.log('🔍 Chaves do produto 0:', Object.keys(productsForMongo[0] || {}));
+      
+      // Guardar no MongoDB através da API
+      const response = await fetch('/api/admin/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer admin-token'
+        },
+        body: JSON.stringify({ products: productsForMongo })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          alert('Produto atualizado e MongoDB atualizado com sucesso!');
+        } else {
+          alert('Erro ao atualizar MongoDB: ' + data.error);
+        }
+      } else {
+        alert('Erro ao atualizar MongoDB');
+      }
+    } catch (error) {
+      console.error('Erro ao guardar produto:', error);
+      alert('Erro ao guardar produto. Tente novamente.');
     }
   };
 
-  const handleAddProduct = () => {
-    if (newProduct.name && newProduct.description && newProduct.price) {
-      const product: Product = {
-        id: Date.now().toString(),
-        name: newProduct.name,
-        description: newProduct.description,
-        price: newProduct.price,
-        category: newProduct.category as 'flores' | 'ceramica',
-        image: newProduct.image || '/images/placeholder.jpg',
-        available: newProduct.available || false,
-        featured: newProduct.featured || false,
-      };
-      const updatedProducts = [...productList, product];
-      setProductList(updatedProducts);
-      saveProductsToFile(updatedProducts);
-      setNewProduct({
-        name: '',
-        description: '',
-        price: 0,
-        category: 'flores',
-        image: '/images/placeholder.jpg',
-        available: true,
-        featured: false,
+  const handleDelete = async (productId: string) => {
+    if (confirm('Tem certeza que deseja excluir este produto?')) {
+      try {
+        const updatedProducts = productList.filter(p => p.id !== productId);
+        setProductList(updatedProducts);
+        
+        // Converter produtos para formato MongoDB
+        const productsForMongo = updatedProducts.map(p => ({
+          name: p.name,
+          description: p.description,
+          price: p.price,
+          category: p.category,
+          images: p.image && p.image !== '/images/placeholder.jpg' 
+            ? [{
+                url: p.image,
+                alt: p.name,
+                publicId: `capim-${p.id}` // ID baseado no ID do produto
+            }]
+            : [],
+          inStock: p.available,
+          featured: p.featured,
+          tags: [],
+          specifications: {
+            dimensions: '',
+            material: '',
+            weight: '',
+            care: ''
+          }
+        }));
+        
+        // Guardar no MongoDB através da API
+        const response = await fetch('/api/admin/products', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer admin-token'
+          },
+          body: JSON.stringify({ products: productsForMongo })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            alert('Produto excluído e MongoDB atualizado com sucesso!');
+          } else {
+            alert('Erro ao atualizar MongoDB: ' + data.error);
+          }
+        } else {
+          alert('Erro ao atualizar MongoDB');
+        }
+      } catch (error) {
+        console.error('Erro ao excluir produto:', error);
+        alert('Erro ao excluir produto. Tente novamente.');
+      }
+    }
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Verificar tipo de ficheiro
+    if (!file.type.startsWith('image/')) {
+      alert('Por favor, selecione apenas ficheiros de imagem.');
+      return;
+    }
+
+    // Verificar tamanho (máximo 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('A imagem deve ter menos de 10MB.');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer admin-token'
+        },
+        body: formData
       });
-      setIsAddingProduct(false);
+
+      if (response.ok) {
+        const data = await response.json();
+        setNewProduct(prev => ({ ...prev, image: data.image.url }));
+        alert('Imagem carregada com sucesso!');
+      } else {
+        const errorData = await response.json();
+        alert('Erro ao carregar imagem: ' + (errorData.error || 'Erro desconhecido'));
+      }
+    } catch (error) {
+      console.error('Erro no upload:', error);
+      alert('Erro ao carregar imagem. Tente novamente.');
+    }
+  };
+
+  const handleEditImageUpload = async (event: React.ChangeEvent<HTMLInputElement>, product: Product) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Verificar tipo de ficheiro
+    if (!file.type.startsWith('image/')) {
+      alert('Por favor, selecione apenas ficheiros de imagem.');
+      return;
+    }
+
+    // Verificar tamanho (máximo 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('A imagem deve ter menos de 10MB.');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer admin-token'
+        },
+        body: formData
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setEditingProduct(prev => prev ? { ...prev, image: data.image.url } : null);
+        alert('Imagem carregada com sucesso!');
+      } else {
+        const errorData = await response.json();
+        alert('Erro ao carregar imagem: ' + (errorData.error || 'Erro desconhecido'));
+      }
+    } catch (error) {
+      console.error('Erro no upload:', error);
+      alert('Erro ao carregar imagem. Tente novamente.');
+    }
+  };
+
+  const handleAddProduct = async () => {
+    if (newProduct.name && newProduct.description && newProduct.price) {
+      try {
+        // Criar produto com formato correto para MongoDB
+        const productForMongo = {
+          name: newProduct.name,
+          description: newProduct.description,
+          price: newProduct.price,
+          category: newProduct.category as 'flores' | 'ceramica',
+          images: newProduct.image && newProduct.image !== '/images/placeholder.jpg' 
+            ? [{
+                url: newProduct.image,
+                alt: newProduct.name,
+                publicId: `capim-${Date.now()}` // ID temporário
+              }]
+            : [],
+          inStock: newProduct.available || false,
+          featured: newProduct.featured || false,
+          tags: [],
+          specifications: {
+            dimensions: '',
+            material: '',
+            weight: '',
+            care: ''
+          }
+        };
+        
+        // Adicionar à lista local (formato antigo para compatibilidade)
+        const productForFrontend: Product = {
+          id: Date.now().toString(),
+          name: newProduct.name,
+          description: newProduct.description,
+          price: newProduct.price,
+          category: newProduct.category as 'flores' | 'ceramica',
+          image: newProduct.image || '/images/placeholder.jpg',
+          available: newProduct.available || false,
+          featured: newProduct.featured || false,
+        };
+        
+        const updatedProducts = [...productList, productForFrontend];
+        setProductList(updatedProducts);
+        
+        // Converter TODOS os produtos para formato MongoDB
+        const allProductsForMongo = updatedProducts.map(p => ({
+          name: p.name,
+          description: p.description,
+          price: p.price,
+          category: p.category,
+          images: p.image && p.image !== '/images/placeholder.jpg' 
+            ? [{
+                url: p.image,
+                alt: p.name,
+                publicId: `capim-${p.id}` // ID baseado no ID do produto
+              }]
+            : [],
+          inStock: p.available,
+          featured: p.featured,
+          tags: [],
+          specifications: {
+            dimensions: '',
+            material: '',
+            weight: '',
+            care: ''
+          }
+        }));
+        
+        // Guardar TODOS os produtos no MongoDB através da API
+        const response = await fetch('/api/admin/products', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer admin-token'
+          },
+          body: JSON.stringify({ 
+            products: allProductsForMongo // Enviar TODOS os produtos
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            alert('Produto adicionado e MongoDB atualizado com sucesso!');
+          } else {
+            alert('Erro ao guardar no MongoDB: ' + data.error);
+          }
+        } else {
+          alert('Erro ao guardar produto no MongoDB');
+        }
+        
+        // Limpar formulário
+        setNewProduct({
+          name: '',
+          description: '',
+          price: 0,
+          category: 'flores',
+          image: '/images/placeholder.jpg',
+          available: true,
+          featured: false,
+        });
+        setIsAddingProduct(false);
+        
+      } catch (error) {
+        console.error('Erro ao adicionar produto:', error);
+        alert('Erro ao adicionar produto. Tente novamente.');
+      }
     }
   };
 
@@ -424,12 +696,31 @@ export default function AdminPage() {
                       
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Imagem</label>
-                        <input
-                          type="text"
-                          value={newProduct.image}
-                          onChange={(e) => setNewProduct(prev => ({ ...prev, image: e.target.value }))}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                        />
+                        <div className="space-y-2">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                          />
+                          {newProduct.image && newProduct.image !== '/images/placeholder.jpg' && (
+                            <div className="relative">
+                              <img 
+                                src={newProduct.image} 
+                                alt="Preview" 
+                                className="w-20 h-20 object-cover rounded-lg border"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setNewProduct(prev => ({ ...prev, image: '/images/placeholder.jpg' }))}
+                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                                title="Remover imagem"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                       
                       <div className="md:col-span-2">
@@ -594,12 +885,31 @@ export default function AdminPage() {
                         
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">Imagem</label>
-                          <input
-                            type="text"
-                            value={editingProduct.image}
-                            onChange={(e) => setEditingProduct(prev => prev ? { ...prev, image: e.target.value } : null)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                          />
+                          <div className="space-y-2">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleEditImageUpload(e, editingProduct)}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                            />
+                            {editingProduct.image && editingProduct.image !== '/images/placeholder.jpg' && (
+                              <div className="relative">
+                                <img 
+                                  src={editingProduct.image} 
+                                  alt="Preview" 
+                                  className="w-20 h-20 object-cover rounded-lg border"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => setEditingProduct(prev => prev ? { ...prev, image: '/images/placeholder.jpg' } : null)}
+                                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
+                                  title="Remover imagem"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                         
                         <div className="md:col-span-2">

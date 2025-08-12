@@ -1,23 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
+import dbConnect from '@/config/dbConnect';
+import SiteSettings from '@/models/SiteSettings';
+import Address from '@/models/Address';
 
-const settingsFilePath = path.join(process.cwd(), 'data', 'adminSettings.json');
-
-// Função para ler as configurações do ficheiro
-async function readSettings() {
+// GET - Ler configurações
+export async function GET() {
   try {
-    const data = await fs.readFile(settingsFilePath, 'utf-8');
-    return JSON.parse(data);
-  } catch (error) {
-    // Se o ficheiro não existir, retorna as configurações padrão
-    return {
-      siteSettings: {
+    await dbConnect();
+    
+    // Buscar configurações gerais do site
+    let siteSettings = await SiteSettings.findOne({});
+    
+    if (!siteSettings) {
+      // Criar configurações padrão se não existirem
+      siteSettings = new SiteSettings({
         name: 'Capim das Pampas',
-        email: 'contacto@capimdaspampas.pt',
-        phone: '+351 912 345 678',
-        whatsapp: '+351 912 345 678',
+        email: 'capimdaspampas@gmail.com',
+        phone: '+351 934 305 372',
+        whatsapp: '+351 934 305 372',
+        team: [
+          { id: '1', name: 'Maria Silva', photo: '' },
+          { id: '2', name: 'João Santos', photo: '' },
+          { id: '3', name: 'Ana Costa', photo: '' }
+        ]
+      });
+      
+      await siteSettings.save();
+    }
+
+    // Buscar endereços
+    let addresses = await Address.find({ active: true });
+    
+    if (addresses.length === 0) {
+      // Criar endereço padrão se não existir
+      const defaultAddress = new Address({
+        name: 'Loja Principal',
         address: 'Rua das Flores, 123 - 1000-001 Lisboa, Portugal',
+        coordinates: [38.7223, -9.1393],
         openingHours: {
           monday: { open: '08:00', close: '18:00', closed: false },
           tuesday: { open: '08:00', close: '18:00', closed: false },
@@ -25,59 +44,37 @@ async function readSettings() {
           thursday: { open: '08:00', close: '18:00', closed: false },
           friday: { open: '08:00', close: '18:00', closed: false },
           saturday: { open: '08:00', close: '16:00', closed: false },
-          sunday: { open: '10:00', close: '16:00', closed: true },
-        },
-        team: [
-          { id: '1', name: 'Maria Silva', photo: '' },
-          { id: '2', name: 'João Santos', photo: '' },
-          { id: '3', name: 'Ana Costa', photo: '' }
-        ]
+          sunday: { open: '10:00', close: '16:00', closed: true }
+        }
+      });
+      
+      await defaultAddress.save();
+      addresses = [defaultAddress];
+    }
+
+    // Converter para o formato esperado pelo frontend
+    const formattedSettings = {
+      siteSettings: {
+        name: siteSettings.name,
+        email: siteSettings.email,
+        phone: siteSettings.phone,
+        whatsapp: siteSettings.whatsapp,
+        team: siteSettings.team
       },
       contactSettings: {
-        phone: '+351 912 345 678',
-        email: 'contacto@capimdaspampas.pt',
-        addresses: [
-          {
-            id: '1',
-            name: 'Loja Principal',
-            address: 'Rua das Flores, 123 - 1000-001 Lisboa, Portugal',
-            coordinates: [38.7223, -9.1393], // Coordenadas de Lisboa
-            openingHours: {
-              monday: { open: '08:00', close: '18:00', closed: false },
-              tuesday: { open: '08:00', close: '18:00', closed: false },
-              wednesday: { open: '08:00', close: '18:00', closed: false },
-              thursday: { open: '08:00', close: '18:00', closed: false },
-              friday: { open: '08:00', close: '18:00', closed: false },
-              saturday: { open: '08:00', close: '16:00', closed: false },
-              sunday: { open: '10:00', close: '16:00', closed: true },
-            }
-          }
-        ]
+        phone: siteSettings.phone,
+        email: siteSettings.email,
+        addresses: addresses.map(addr => ({
+          id: addr._id.toString(),
+          name: addr.name,
+          address: addr.address,
+          coordinates: addr.coordinates,
+          openingHours: addr.openingHours
+        }))
       }
     };
-  }
-}
 
-// Função para guardar as configurações no ficheiro
-async function writeSettings(settings: any) {
-  try {
-    // Garantir que o diretório existe
-    const dir = path.dirname(settingsFilePath);
-    await fs.mkdir(dir, { recursive: true });
-    
-    await fs.writeFile(settingsFilePath, JSON.stringify(settings, null, 2));
-    return true;
-  } catch (error) {
-    console.error('Erro ao guardar configurações:', error);
-    return false;
-  }
-}
-
-// GET - Ler configurações
-export async function GET() {
-  try {
-    const settings = await readSettings();
-    return NextResponse.json(settings, {
+    return NextResponse.json(formattedSettings, {
       headers: {
         'Cache-Control': 'no-store, no-cache, must-revalidate',
         'Pragma': 'no-cache',
@@ -85,6 +82,7 @@ export async function GET() {
       }
     });
   } catch (error) {
+    console.error('Erro ao ler configurações:', error);
     return NextResponse.json(
       { error: 'Erro ao ler configurações' },
       { status: 500 }
@@ -92,14 +90,9 @@ export async function GET() {
   }
 }
 
-// Forçar revalidação a cada 0 segundos
-export const revalidate = 0;
-
 // POST - Guardar configurações (apenas para admin autenticado)
 export async function POST(request: NextRequest) {
   try {
-    const { siteSettings, contactSettings } = await request.json();
-    
     // Verificar se o admin está autenticado
     const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -119,23 +112,79 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const settings = {
-      siteSettings,
-      contactSettings,
-      lastUpdated: new Date().toISOString()
-    };
-
-    const success = await writeSettings(settings);
+    const { siteSettings, contactSettings } = await request.json();
     
-    if (success) {
-      return NextResponse.json({ success: true, message: 'Configurações guardadas com sucesso' });
-    } else {
-      return NextResponse.json(
-        { error: 'Erro ao guardar configurações' },
-        { status: 500 }
-      );
+    await dbConnect();
+    
+    // Atualizar configurações gerais do site
+    let siteConfig = await SiteSettings.findOne({});
+    
+    if (!siteConfig) {
+      siteConfig = new SiteSettings();
     }
+
+    siteConfig.name = siteSettings.name;
+    siteConfig.email = siteSettings.email;
+    siteConfig.phone = siteSettings.phone;
+    siteConfig.whatsapp = siteSettings.whatsapp;
+    siteConfig.team = siteSettings.team;
+
+    await siteConfig.save();
+
+    // Obter IDs dos endereços que devem permanecer
+    const remainingAddressIds = contactSettings.addresses
+      .filter(addr => addr.id && addr.id.length === 24 && /^[0-9a-fA-F]{24}$/.test(addr.id))
+      .map(addr => addr.id);
+
+    // Apagar endereços que foram removidos no frontend
+    if (remainingAddressIds.length > 0) {
+      await Address.deleteMany({
+        _id: { $nin: remainingAddressIds }
+      });
+      console.log('🗑️ Endereços removidos apagados da BD');
+    }
+
+    // Atualizar ou criar endereços restantes
+    for (const addressData of contactSettings.addresses) {
+      // Verificar se o ID é um ObjectId válido do MongoDB
+      if (addressData.id && addressData.id.length === 24 && /^[0-9a-fA-F]{24}$/.test(addressData.id)) {
+        // ID válido do MongoDB - atualizar endereço existente
+        try {
+          await Address.findByIdAndUpdate(addressData.id, {
+            name: addressData.name,
+            address: addressData.address,
+            coordinates: addressData.coordinates,
+            openingHours: addressData.openingHours
+          });
+        } catch (error) {
+          console.error('Erro ao atualizar endereço:', error);
+          // Se falhar, criar novo endereço
+          const newAddress = new Address({
+            name: addressData.name,
+            address: addressData.address,
+            coordinates: addressData.coordinates,
+            openingHours: addressData.openingHours
+          });
+          await newAddress.save();
+        }
+      } else {
+        // ID inválido ou novo endereço - criar novo
+        const newAddress = new Address({
+          name: addressData.name,
+          address: addressData.address,
+          coordinates: addressData.coordinates,
+          openingHours: addressData.openingHours
+        });
+        await newAddress.save();
+      }
+    }
+
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Configurações guardadas com sucesso' 
+    });
   } catch (error) {
+    console.error('Erro ao guardar configurações:', error);
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

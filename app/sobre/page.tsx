@@ -48,7 +48,7 @@ export default function AboutPage() {
           <div className="relative">
             <div className="bg-white rounded-2xl h-96 flex items-center justify-center p-8">
               <img 
-                src="/images/logo/logo.jpg" 
+                src="/images/about/about.jpg" 
                 alt={`${siteConfig.name} Logo`}
                 className="h-80 w-auto object-contain"
               />

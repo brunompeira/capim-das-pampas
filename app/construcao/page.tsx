@@ -1,121 +1,175 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Wrench, Clock, Mail, Phone } from 'lucide-react';
+import { useFavorites } from '@/contexts/FavoritesContext';
+import { useAdminSettings } from '@/hooks/useAdminSettings';
+import { Wrench, Hammer, Clock, Phone, Mail } from 'lucide-react';
 
-export default function ConstrucaoPage() {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
-  });
-
-  useEffect(() => {
-         // Data estimada de conclusão (podes ajustar)
-     const targetDate = new Date('2025-08-15T20:00:00');
-    
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate.getTime() - now;
-      
-      if (distance > 0) {
-        setTimeLeft({
-          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((distance % (1000 * 60)) / 1000)
-        });
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
+export default function ConstructionPage() {
+  const { favoriteProducts, removeFromFavorites } = useFavorites();
+  const { adminSettings, isLoading } = useAdminSettings();
 
   return (
-         <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-100 flex items-center justify-center px-4">
-       <div className="max-w-4xl mx-auto text-center">
-         {/* Logo/Ícone */}
-         <div className="mb-8">
-           <div className="mx-auto w-24 h-24 bg-primary-600 rounded-full flex items-center justify-center mb-6">
-             <Wrench className="w-12 h-12 text-white" />
-           </div>
-           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-             Capim das Pampas
-           </h1>
-           <h2 className="text-2xl md:text-3xl font-semibold text-primary-600 mb-2">
-             Site em Construção
-           </h2>
-         </div>
-
-                 {/* Mensagem principal */}
-         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-primary-100">
-           <p className="text-lg md:text-xl text-gray-700 mb-6 leading-relaxed">
-             Estamos a trabalhar para trazer-te uma experiência incrível! 
-             O nosso novo site estará em breve disponível com todas as funcionalidades 
-             para gerir a tua loja de flores e cerâmica.
-           </p>
-         </div>
-
-                 {/* Contador regressivo */}
-         <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-primary-100">
-           <h3 className="text-xl font-semibold text-gray-800 mb-6">
-             <Clock className="inline w-6 h-6 mr-2 text-primary-600" />
-             Lançamento em:
-           </h3>
-           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-             <div className="text-center">
-               <div className="bg-primary-600 text-white text-2xl md:text-4xl font-bold rounded-lg p-4 mb-2">
-                 {timeLeft.days}
-               </div>
-               <div className="text-sm text-gray-600">Dias</div>
-             </div>
-             <div className="text-center">
-               <div className="bg-primary-600 text-white text-2xl md:text-4xl font-bold rounded-lg p-4 mb-2">
-                 {timeLeft.hours}
-               </div>
-               <div className="text-sm text-gray-600">Horas</div>
-             </div>
-             <div className="text-center">
-               <div className="bg-primary-600 text-white text-2xl md:text-4xl font-bold rounded-lg p-4 mb-2">
-                 {timeLeft.minutes}
-               </div>
-               <div className="text-sm text-gray-600">Minutos</div>
-             </div>
-             <div className="text-center">
-               <div className="bg-primary-600 text-white text-2xl md:text-4xl font-bold rounded-lg p-4 mb-2">
-                 {timeLeft.seconds}
-               </div>
-               <div className="text-sm text-gray-600">Segundos</div>
-             </div>
-           </div>
-         </div>
-
-                 {/* Informações de contacto */}
-         <div className="bg-white rounded-2xl shadow-xl p-8 border border-primary-100">
-           <h3 className="text-xl font-semibold text-gray-800 mb-6">
-             📞 Contacta-nos entretanto:
-           </h3>
-           <div className="grid md:grid-cols-2 gap-6">
-             <div className="flex items-center justify-center space-x-3 text-primary-700">
-               <Phone className="w-5 h-5" />
-               <span className="text-lg">+351 934 305 372</span>
-             </div>
-             <div className="flex items-center justify-center space-x-3 text-primary-700">
-               <Mail className="w-5 h-5" />
-               <span className="text-lg">capimdaspampas@gmail.com</span>
-             </div>
-           </div>
-           <p className="text-gray-600 mt-6 text-sm">
-             Estamos disponíveis para responder às tuas questões e encomendas!
-           </p>
-         </div>
-
-        {/* Footer */}
-        <div className="mt-8 text-gray-500 text-sm">
-          <p>© 2024 Capim das Pampas. Todos os direitos reservados.</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+                <Wrench className="w-5 h-5 text-primary-600" />
+              </div>
+              <h1 className="text-xl font-bold text-primary-900">Capim das Pampas</h1>
+            </div>
+            <div className="text-sm text-primary-600 font-medium">
+              Em construção
+            </div>
+          </div>
         </div>
-      </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 px-4 py-16">
+        <div className="max-w-3xl mx-auto">
+          {/* Page Header */}
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 rounded-full mb-6">
+              <Hammer className="w-8 h-8 text-primary-600" />
+            </div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Site em Construção</h1>
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              Estamos a trabalhar para trazer-te algo incrível! Enquanto isso, contacta-nos.
+            </p>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100 mb-8">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Progresso</h2>
+              <div className="bg-gray-200 rounded-full h-3 mb-4">
+                <div className="bg-primary-600 h-3 rounded-full w-3/4 animate-pulse"></div>
+              </div>
+              <p className="text-sm text-gray-600">75% concluído</p>
+            </div>
+          </div>
+
+          {/* Features Coming Soon */}
+          <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-100 mb-8">
+            <div className="flex items-center mb-6">
+              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mr-4">
+                <Wrench className="w-6 h-6 text-primary-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">Funcionalidades a Chegar</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex items-start">
+                <Wrench className="w-6 h-6 text-primary-600 mr-4 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-gray-900">Catálogo Digital</h3>
+                  <p className="text-gray-600 text-sm">
+                    Produtos artesanais únicos e exclusivos
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <Clock className="w-6 h-6 text-primary-600 mr-4 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-gray-900">Experiência Premium</h3>
+                  <p className="text-gray-600 text-sm">
+                    Interface moderna e intuitiva
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Information */}
+          <div className="bg-white rounded-xl shadow-lg p-10 border border-gray-100">
+            <div className="flex items-center mb-8">
+              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mr-4">
+                <Phone className="w-6 h-6 text-primary-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">Informações de Contacto</h2>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="flex items-start">
+                <Phone className="w-6 h-6 text-primary-600 mr-4 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-gray-900">Telefone</h3>
+                  {isLoading ? (
+                    <div className="animate-pulse bg-gray-200 h-4 w-32 rounded"></div>
+                  ) : (
+                    <div className="space-y-2">
+                      <a
+                        href={`tel:${adminSettings.phone}`}
+                        className="text-gray-600 hover:text-primary-600 font-medium block"
+                      >
+                        {adminSettings.phone}
+                      </a>
+                      <a
+                        href={`tel:${adminSettings.phone}`}
+                        className="inline-flex items-center px-3 py-1.5 bg-primary-50 text-primary-700 text-sm rounded-md hover:bg-primary-100 transition-colors border border-primary-200"
+                        title="Ligar"
+                      >
+                        <Phone className="w-4 h-4 mr-1.5" />
+                        Ligar
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <Mail className="w-6 h-6 text-primary-600 mr-4 mt-1" />
+                <div>
+                  <h3 className="font-semibold text-gray-900">E-mail</h3>
+                  {isLoading ? (
+                    <div className="animate-pulse bg-gray-200 h-4 w-40 rounded"></div>
+                  ) : (
+                    <div className="space-y-2">
+                      <a
+                        href={`mailto:${adminSettings.email}`}
+                        className="text-gray-600 hover:text-primary-600 font-medium block"
+                      >
+                        {adminSettings.email}
+                      </a>
+                      <a
+                        href={`mailto:${adminSettings.email}`}
+                        className="inline-flex items-center px-3 py-1.5 bg-primary-50 text-primary-700 text-sm rounded-md hover:bg-primary-100 transition-colors border border-primary-200"
+                        title="Enviar E-mail"
+                      >
+                        <Mail className="w-4 h-4 mr-1.5" />
+                        Enviar E-mail
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <p className="text-gray-600 mb-4">
+                Estamos a trabalhar arduamente para trazer-te a melhor experiência possível.
+              </p>
+              <p className="text-sm text-gray-500">
+                Volta em breve para veres as novidades!
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+             {/* Footer */}
+       <footer className="bg-white border-t border-gray-200 mt-16">
+         <div className="max-w-7xl mx-auto px-4 py-8">
+           <div className="text-center text-gray-500">
+             <p>&copy; 2025 Capim das Pampas. Todos os direitos reservados.</p>
+             <p className="text-sm mt-2">Site em desenvolvimento</p>
+           </div>
+         </div>
+       </footer>
     </div>
   );
 }
