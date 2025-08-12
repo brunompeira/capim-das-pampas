@@ -18,6 +18,11 @@ export default function Home() {
   const { favoriteProducts, removeFromFavorites } = useFavorites();
   const { adminSettings, contactSettings, isLoading } = useAdminSettings();
 
+  // Redirecionamento automático para página de construção
+  useEffect(() => {
+    window.location.href = '/construcao';
+  }, []);
+
   // Carregar produtos da API
   useEffect(() => {
     const loadProducts = async () => {
