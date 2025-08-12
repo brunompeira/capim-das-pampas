@@ -133,8 +133,8 @@ export async function POST(request: NextRequest) {
 
     // Obter IDs dos endereços que devem permanecer
     const remainingAddressIds = contactSettings.addresses
-      .filter(addr => addr.id && addr.id.length === 24 && /^[0-9a-fA-F]{24}$/.test(addr.id))
-      .map(addr => addr.id);
+      .filter((addr: { id: string }) => addr.id && addr.id.length === 24 && /^[0-9a-fA-F]{24}$/.test(addr.id))
+      .map((addr: { id: string }) => addr.id);
 
     // Apagar endereços que foram removidos no frontend
     if (remainingAddressIds.length > 0) {
