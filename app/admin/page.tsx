@@ -588,16 +588,16 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-lg shadow-md">
           {/* Header */}
           <div className="border-b border-gray-200">
-            <div className="px-6 py-4 flex justify-between items-center">
-              <h1 className="text-3xl font-bold text-gray-900">Painel de Administração</h1>
+            <div className="px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-3 sm:space-y-0">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Painel de Administração</h1>
               <button
                 onClick={handleLogout}
-                className="flex items-center px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                className="flex items-center px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors w-full sm:w-auto justify-center"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Sair
@@ -605,10 +605,10 @@ export default function AdminPage() {
             </div>
             
             {/* Tabs */}
-            <div className="flex border-b border-gray-200">
+            <div className="flex border-b border-gray-200 overflow-x-auto">
               <button
                 onClick={() => setActiveTab('products')}
-                className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${
+                className={`px-4 sm:px-6 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
                   activeTab === 'products'
                     ? 'border-primary-500 text-primary-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -619,7 +619,7 @@ export default function AdminPage() {
               </button>
               <button
                 onClick={() => setActiveTab('settings')}
-                className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${
+                className={`px-4 sm:px-6 py-3 font-medium text-sm border-b-2 transition-colors whitespace-nowrap flex-shrink-0 ${
                   activeTab === 'settings'
                     ? 'border-primary-500 text-primary-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -633,14 +633,14 @@ export default function AdminPage() {
           </div>
 
           {/* Content */}
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {activeTab === 'products' && (
               <div>
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Gestão de Produtos</h2>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-3 sm:space-y-0">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Gestão de Produtos</h2>
                   <button
                     onClick={() => setIsAddingProduct(true)}
-                    className="bg-primary-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-primary-700 transition-colors"
+                    className="bg-primary-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-primary-700 transition-colors w-full sm:w-auto justify-center"
                   >
                     <Plus className="w-5 h-5 mr-2" />
                     Adicionar Produto
@@ -649,18 +649,18 @@ export default function AdminPage() {
 
                 {/* Add Product Form */}
                 {isAddingProduct && (
-                  <div className="bg-gray-50 rounded-lg p-6 mb-6">
+                  <div className="bg-gray-50 rounded-lg p-4 sm:p-6 mb-6">
                     <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-xl font-semibold">Adicionar Novo Produto</h3>
+                      <h3 className="text-lg sm:text-xl font-semibold">Adicionar Novo Produto</h3>
                       <button
                         onClick={() => setIsAddingProduct(false)}
-                        className="text-gray-500 hover:text-gray-700"
+                        className="text-gray-500 hover:text-gray-700 p-1"
                       >
                         <X className="w-5 h-5" />
                       </button>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Nome</label>
                         <input
@@ -768,7 +768,7 @@ export default function AdminPage() {
                     <div className="mt-4">
                       <button
                         onClick={handleAddProduct}
-                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors w-full sm:w-auto"
                       >
                         <Save className="w-4 h-4 inline mr-2" />
                         Salvar Produto
@@ -779,26 +779,26 @@ export default function AdminPage() {
 
                 {/* Products Table */}
                 <div className="overflow-x-auto">
-                  <table className="w-full">
+                  <table className="w-full min-w-[800px]">
                     <thead>
                       <tr className="border-b border-gray-200">
-                        <th className="text-left py-3 px-4">Produto</th>
-                        <th className="text-left py-3 px-4">Categoria</th>
-                        <th className="text-left py-3 px-4">Preço</th>
-                        <th className="text-left py-3 px-4">Status</th>
-                        <th className="text-left py-3 px-4">Ações</th>
+                        <th className="text-left py-3 px-2 sm:px-4">Produto</th>
+                        <th className="text-left py-3 px-2 sm:px-4">Categoria</th>
+                        <th className="text-left py-3 px-2 sm:px-4">Preço</th>
+                        <th className="text-left py-3 px-2 sm:px-4">Status</th>
+                        <th className="text-left py-3 px-2 sm:px-4">Ações</th>
                       </tr>
                     </thead>
                     <tbody>
                       {productList.map((product) => (
                         <tr key={product.id} className="border-b border-gray-100">
-                          <td className="py-3 px-4">
+                          <td className="py-3 px-2 sm:px-4">
                             <div>
-                              <div className="font-medium">{product.name}</div>
-                              <div className="text-sm text-gray-500">{product.description.substring(0, 50)}...</div>
+                              <div className="font-medium text-sm sm:text-base">{product.name}</div>
+                              <div className="text-xs sm:text-sm text-gray-500 hidden sm:block">{product.description.substring(0, 50)}...</div>
                             </div>
                           </td>
-                          <td className="py-3 px-4">
+                          <td className="py-3 px-2 sm:px-4">
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                               product.category === 'flores' 
                                 ? 'bg-pink-100 text-pink-800' 
@@ -807,12 +807,14 @@ export default function AdminPage() {
                               {product.category === 'flores' ? 'Flores' : 'Cerâmica'}
                             </span>
                           </td>
-                          <td className="py-3 px-4">
-                            {product.price === null ? 'Preço sob consulta' : `€ ${product.price.toFixed(2).replace('.', ',')}`}
+                          <td className="py-3 px-2 sm:px-4">
+                            <div className="text-sm">
+                              {product.price === null ? 'Preço sob consulta' : `€ ${product.price.toFixed(2).replace('.', ',')}`}
+                            </div>
                           </td>
-                          <td className="py-3 px-4">
+                          <td className="py-3 px-2 sm:px-4">
                             <div className="space-y-1">
-                              <div className={`text-sm ${product.available ? 'text-green-600' : 'text-red-600'}`}>
+                              <div className={`text-xs sm:text-sm ${product.available ? 'text-green-600' : 'text-red-600'}`}>
                                 {product.available ? 'Disponível' : 'Indisponível'}
                               </div>
                               {product.featured && (
@@ -820,18 +822,18 @@ export default function AdminPage() {
                               )}
                             </div>
                           </td>
-                          <td className="py-3 px-4">
-                            <div className="flex space-x-2">
+                          <td className="py-3 px-2 sm:px-4">
+                            <div className="flex space-x-1 sm:space-x-2">
                               <button
                                 onClick={() => handleEdit(product)}
-                                className="text-blue-600 hover:text-blue-800"
+                                className="text-blue-600 hover:text-blue-800 p-1"
                                 title="Editar"
                               >
                                 <Edit className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={() => handleDelete(product.id)}
-                                className="text-red-600 hover:text-red-800"
+                                className="text-red-600 hover:text-red-800 p-1"
                                 title="Excluir"
                               >
                                 <Trash2 className="w-4 h-4" />
@@ -846,19 +848,19 @@ export default function AdminPage() {
 
                 {/* Edit Modal */}
                 {editingProduct && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-lg p-4 sm:p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                       <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl font-semibold">Editar Produto</h2>
+                        <h2 className="text-lg sm:text-xl font-semibold">Editar Produto</h2>
                         <button
                           onClick={() => setEditingProduct(null)}
-                          className="text-gray-500 hover:text-gray-700"
+                          className="text-gray-500 hover:text-gray-700 p-1"
                         >
                           <X className="w-5 h-5" />
                         </button>
                       </div>
                       
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">Nome</label>
                           <input
@@ -963,17 +965,17 @@ export default function AdminPage() {
                         </div>
                       </div>
                       
-                      <div className="mt-6 flex space-x-4">
+                      <div className="mt-6 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
                         <button
                           onClick={() => editingProduct && handleSave(editingProduct)}
-                          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors w-full sm:w-auto"
                         >
                           <Save className="w-4 h-4 inline mr-2" />
                           Salvar
                         </button>
                         <button
                           onClick={() => setEditingProduct(null)}
-                          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors"
+                          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors w-full sm:w-auto"
                         >
                           Cancelar
                         </button>
@@ -986,23 +988,23 @@ export default function AdminPage() {
 
             {activeTab === 'settings' && (
               <div>
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Configurações do Site</h2>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-3 sm:space-y-0">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Configurações do Site</h2>
                   <button
                     onClick={handleSaveSettings}
-                    className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+                    className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors w-full sm:w-auto justify-center"
                   >
                     <Save className="w-4 h-4 inline mr-2" />
                     Guardar Configurações
                   </button>
                 </div>
 
-                                 <div className="space-y-8">
+                                 <div className="space-y-6 sm:space-y-8">
                    {/* Informações de Contacto */}
-                   <div className="bg-gray-50 rounded-lg p-6">
+                   <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
                      <h3 className="text-lg font-semibold mb-4">Informações de Contacto</h3>
                      
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                        <div>
                          <label className="block text-sm font-medium text-gray-700 mb-1">Nome da Empresa</label>
                          <input
@@ -1046,19 +1048,19 @@ export default function AdminPage() {
                    </div>
 
                    {/* Múltiplos Endereços */}
-                   <div className="bg-gray-50 rounded-lg p-6">
-                     <div className="flex justify-between items-center mb-4">
+                   <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 space-y-3 sm:space-y-0">
                        <h3 className="text-lg font-semibold">Endereços e Horários</h3>
                        <button
                          onClick={addNewAddress}
-                         className="bg-primary-600 text-white px-3 py-1 rounded-lg hover:bg-primary-700 transition-colors text-sm"
+                         className="bg-primary-600 text-white px-3 py-1 rounded-lg hover:bg-primary-700 transition-colors text-sm w-full sm:w-auto"
                        >
                          <Plus className="w-4 h-4 inline mr-1" />
                          Adicionar Endereço
                        </button>
                      </div>
                      
-                     <div className="space-y-6">
+                     <div className="space-y-4 sm:space-y-6">
                        {contactSettings.addresses.map((address, index) => (
                          <div key={address.id} className="bg-white rounded-lg p-4 border">
                            <div className="flex justify-between items-start mb-4">
@@ -1066,14 +1068,14 @@ export default function AdminPage() {
                              {contactSettings.addresses.length > 1 && (
                                <button
                                  onClick={() => removeAddress(address.id)}
-                                 className="text-red-600 hover:text-red-800 text-sm"
+                                 className="text-red-600 hover:text-red-800 text-sm p-1"
                                >
                                  <Trash2 className="w-4 h-4" />
                                </button>
                              )}
                            </div>
                            
-                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
                              {/* Dados do Endereço */}
                              <div>
                                <div className="mb-4">
@@ -1097,7 +1099,7 @@ export default function AdminPage() {
                                </div>
                                
                                {/* Coordenadas */}
-                               <div className="grid grid-cols-2 gap-4">
+                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                  <div>
                                    <label className="block text-sm font-medium text-gray-700 mb-1">
                                      Latitude (opcional)
@@ -1142,8 +1144,8 @@ export default function AdminPage() {
                                <h5 className="text-sm font-medium text-gray-700 mb-3">Horário de Funcionamento</h5>
                                <div className="space-y-2">
                                  {daysOfWeek.map((day) => (
-                                   <div key={day.key} className="flex items-center space-x-2 p-2 bg-gray-50 rounded">
-                                     <div className="w-20">
+                                   <div key={day.key} className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 p-2 bg-gray-50 rounded">
+                                     <div className="w-20 flex-shrink-0">
                                        <span className="text-xs font-medium">{day.label}</span>
                                      </div>
                                      
@@ -1185,12 +1187,12 @@ export default function AdminPage() {
                    </div>
 
                    {/* Equipa */}
-                   <div className="bg-gray-50 rounded-lg p-6">
-                     <div className="flex justify-between items-center mb-4">
+                   <div className="bg-gray-50 rounded-lg p-4 sm:p-6">
+                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 space-y-3 sm:space-y-0">
                        <h3 className="text-lg font-semibold">Equipa</h3>
                        <button
                          onClick={addTeamMember}
-                         className="bg-primary-600 text-white px-3 py-1 rounded-lg hover:bg-primary-700 transition-colors text-sm"
+                         className="bg-primary-600 text-white px-3 py-1 rounded-lg hover:bg-primary-700 transition-colors text-sm w-full sm:w-auto"
                        >
                          <Plus className="w-4 h-4 inline mr-1" />
                          Adicionar Membro
@@ -1205,14 +1207,14 @@ export default function AdminPage() {
                              {team.length > 1 && (
                                <button
                                  onClick={() => removeTeamMember(member.id)}
-                                 className="text-red-600 hover:text-red-800 text-sm"
+                                 className="text-red-600 hover:text-red-800 text-sm p-1"
                                >
                                  <Trash2 className="w-4 h-4" />
                                </button>
                              )}
                            </div>
                            
-                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                              <div>
                                <label className="block text-sm font-medium text-gray-700 mb-1">Nome</label>
                                <input

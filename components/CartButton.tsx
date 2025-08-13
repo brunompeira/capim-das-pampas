@@ -64,7 +64,7 @@ export default function CartButton({ favoriteProducts, onRemoveFavorite }: CartB
               </h3>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                className="p-1 hover:bg-gray-100 rounded-full transition-colors duration-200 text-gray-600 hover:text-gray-800"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -106,7 +106,7 @@ export default function CartButton({ favoriteProducts, onRemoveFavorite }: CartB
                       </div>
                       <button
                         onClick={() => onRemoveFavorite(product.id)}
-                        className="p-1 text-gray-400 hover:text-red-500 transition-colors duration-200"
+                        className="p-1 text-gray-500 hover:text-red-500 transition-colors duration-200"
                       >
                         <X className="w-4 h-4" />
                       </button>
