@@ -16,7 +16,7 @@ export default function ConstructionPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Password temporário hardcoded (apenas para desenvolvimento)
-  const TEMP_PASSWORD = 'capim2025';
+  const TEMP_PASSWORD = 'ruiloco';
 
   // Verificar se já está autenticado
   useEffect(() => {

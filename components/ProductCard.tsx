@@ -51,11 +51,11 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
         
                   <div className="flex items-center justify-between">
                     <span className={`font-bold ${
-                      formatPrice(product.price).isConsultation 
+                      formatPrice(product.price ?? 0).isConsultation 
                         ? 'text-sm text-gray-500 font-normal' 
                         : 'text-xl text-primary-600'
                     }`}>
-                      {formatPrice(product.price).text}
+                      {formatPrice(product.price ?? 0).text}
                     </span>
             
             <div className="flex space-x-2">

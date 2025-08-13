@@ -156,11 +156,11 @@ export default function ProductDetailPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <span className={`font-bold ${
-                    formatPrice(product.price).isConsultation 
+                    formatPrice(product.price ?? 0).isConsultation 
                       ? 'text-lg text-gray-500 font-normal' 
                       : 'text-2xl text-primary-600'
                   }`}>
-                    {formatPrice(product.price).text}
+                    {formatPrice(product.price ?? 0).text}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -226,11 +226,11 @@ export default function ProductDetailPage() {
                 <div className="flex justify-between">
                   <span>Preço:</span>
                   <span className={`font-medium ${
-                    formatPrice(product.price).isConsultation 
+                    formatPrice(product.price ?? 0).isConsultation 
                       ? 'text-sm text-gray-500' 
-                      : 'text-gray-900'
+                      : 'text-primary-600'
                   }`}>
-                    {formatPrice(product.price).text}
+                    {formatPrice(product.price ?? 0).text}
                   </span>
                 </div>
               </div>
@@ -262,11 +262,11 @@ export default function ProductDetailPage() {
                     <p className="text-sm text-gray-600 mb-2 line-clamp-2">{relatedProduct.description}</p>
                     <div className="flex items-center justify-between">
                       <span className={`font-bold ${
-                        formatPrice(relatedProduct.price).isConsultation 
+                        formatPrice(relatedProduct.price ?? 0).isConsultation 
                           ? 'text-sm text-gray-500 font-normal' 
                           : 'text-primary-600'
                       }`}>
-                        {formatPrice(relatedProduct.price).text}
+                        {formatPrice(relatedProduct.price ?? 0).text}
                       </span>
                       {relatedProduct.featured && (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">

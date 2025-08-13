@@ -27,7 +27,7 @@ export default function CartButton({ favoriteProducts, onRemoveFavorite }: CartB
   const createWhatsAppMessage = () => {
     const productsList = favoriteProducts
       .map(product => {
-        const priceInfo = formatPrice(product.price);
+        const priceInfo = formatPrice(product.price ?? 0);
         return `• ${product.name} - ${priceInfo.text}`;
       })
       .join('\n');
@@ -97,11 +97,11 @@ export default function CartButton({ favoriteProducts, onRemoveFavorite }: CartB
                         <h4 className="font-medium text-gray-900 truncate">{product.name}</h4>
                         <p className="text-sm text-gray-600 truncate">{product.description}</p>
                         <p className={`font-semibold ${
-                          formatPrice(product.price).isConsultation 
+                          formatPrice(product.price ?? 0).isConsultation 
                             ? 'text-sm text-gray-500 font-normal' 
                             : 'text-primary-600'
                         }`}>
-                          {formatPrice(product.price).text}
+                          {formatPrice(product.price ?? 0).text}
                         </p>
                       </div>
                       <button
@@ -121,11 +121,7 @@ export default function CartButton({ favoriteProducts, onRemoveFavorite }: CartB
               <div className="p-4 border-t bg-gray-50">
                 <div className="flex items-center justify-between mb-4">
                   <span className="font-semibold text-gray-900">Total:</span>
-                  <span className={`text-xl font-bold ${
-                    totalPrice === 0 
-                      ? 'text-sm text-gray-500 font-normal' 
-                      : 'text-primary-600'
-                  }`}>
+                  <span className="text-xl font-bold text-primary-600">
                     {totalPrice === 0 ? 'Preço sob consulta' : formatPrice(totalPrice).text}
                   </span>
                 </div>
