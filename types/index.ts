@@ -2,7 +2,7 @@ export interface Product {
   id: string;
   name: string;
   description: string;
-  price: number;
+  price: number | null;
   category: 'flores' | 'ceramica';
   image: string;
   available: boolean;

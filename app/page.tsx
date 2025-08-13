@@ -24,6 +24,16 @@ export default function Home() {
   useEffect(() => {
     const checkConstructionMode = async () => {
       try {
+        // Verificar se já tem acesso autorizado através de cookie
+        const cookies = document.cookie.split(';');
+        const accessCookie = cookies.find(cookie => cookie.trim().startsWith('construction_access='));
+        const hasAccess = accessCookie && accessCookie.split('=')[1] === 'true';
+        
+        if (hasAccess) {
+          // Se tem acesso autorizado, não redirecionar
+          return;
+        }
+
         const response = await fetch('/api/construction-status');
         if (response.ok) {
           const { isUnderConstruction } = await response.json();

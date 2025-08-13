@@ -12,6 +12,14 @@ export function middleware(request: NextRequest) {
       return NextResponse.next();
     }
     
+    // Verificar se tem cookie de acesso autorizado
+    const hasAccess = request.cookies.get('construction_access')?.value === 'true';
+    
+    if (hasAccess) {
+      // Se tem acesso autorizado, permitir acesso
+      return NextResponse.next();
+    }
+    
     // Redirecionar para página de construção
     return NextResponse.redirect(new URL('/construcao', request.url));
   }

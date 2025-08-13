@@ -5,6 +5,7 @@ import { ShoppingBag, X, Heart, MessageCircle } from 'lucide-react';
 import Image from 'next/image';
 import { Product } from '@/types';
 import { useAdminSettings } from '@/hooks/useAdminSettings';
+import { formatPrice } from '@/lib/utils';
 
 interface CartButtonProps {
   favoriteProducts: Product[];
@@ -15,21 +16,24 @@ export default function CartButton({ favoriteProducts, onRemoveFavorite }: CartB
   const [isOpen, setIsOpen] = useState(false);
   const { adminSettings } = useAdminSettings();
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('pt-PT', {
-      style: 'currency',
-      currency: 'EUR'
-    }).format(price);
-  };
-
-  const totalPrice = favoriteProducts.reduce((sum, product) => sum + product.price, 0);
+  const totalPrice = favoriteProducts.reduce((sum, product) => {
+    // Se o produto tem preço 0, não adicionar ao total
+    if (product.price === 0 || product.price === null || product.price === undefined) {
+      return sum;
+    }
+    return sum + product.price;
+  }, 0);
 
   const createWhatsAppMessage = () => {
     const productsList = favoriteProducts
-      .map(product => `• ${product.name} - ${formatPrice(product.price)}`)
+      .map(product => {
+        const priceInfo = formatPrice(product.price);
+        return `• ${product.name} - ${priceInfo.text}`;
+      })
       .join('\n');
     
-    const message = `Olá! Gostaria de fazer um pedido com os seguintes produtos:\n\n${productsList}\n\nTotal: ${formatPrice(totalPrice)}\n\nPoderia ajudar-me?`;
+    const totalText = totalPrice === 0 ? 'Total: Preço sob consulta' : `Total: ${formatPrice(totalPrice).text}`;
+    const message = `Olá! Gostaria de fazer um pedido com os seguintes produtos:\n\n${productsList}\n\n${totalText}\n\nPoderia ajudar-me?`;
     
     return encodeURIComponent(message);
   };
@@ -92,7 +96,13 @@ export default function CartButton({ favoriteProducts, onRemoveFavorite }: CartB
                       <div className="flex-1 min-w-0">
                         <h4 className="font-medium text-gray-900 truncate">{product.name}</h4>
                         <p className="text-sm text-gray-600 truncate">{product.description}</p>
-                        <p className="text-primary-600 font-semibold">{formatPrice(product.price)}</p>
+                        <p className={`font-semibold ${
+                          formatPrice(product.price).isConsultation 
+                            ? 'text-sm text-gray-500 font-normal' 
+                            : 'text-primary-600'
+                        }`}>
+                          {formatPrice(product.price).text}
+                        </p>
                       </div>
                       <button
                         onClick={() => onRemoveFavorite(product.id)}
@@ -111,7 +121,13 @@ export default function CartButton({ favoriteProducts, onRemoveFavorite }: CartB
               <div className="p-4 border-t bg-gray-50">
                 <div className="flex items-center justify-between mb-4">
                   <span className="font-semibold text-gray-900">Total:</span>
-                  <span className="text-xl font-bold text-primary-600">{formatPrice(totalPrice)}</span>
+                  <span className={`text-xl font-bold ${
+                    totalPrice === 0 
+                      ? 'text-sm text-gray-500 font-normal' 
+                      : 'text-primary-600'
+                  }`}>
+                    {totalPrice === 0 ? 'Preço sob consulta' : formatPrice(totalPrice).text}
+                  </span>
                 </div>
                 
                 <div className="space-y-3">

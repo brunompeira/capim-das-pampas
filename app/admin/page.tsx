@@ -195,12 +195,12 @@ export default function AdminPage() {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          alert('Produto atualizado e MongoDB atualizado com sucesso!');
+          alert('Produto atualizado com sucesso!');
         } else {
-          alert('Erro ao atualizar MongoDB: ' + data.error);
+          alert('Erro ao atualizar produto: ' + data.error);
         }
       } else {
-        alert('Erro ao atualizar MongoDB');
+        alert('Erro ao atualizar produto');
       }
     } catch (error) {
       console.error('Erro ao guardar produto:', error);
@@ -251,12 +251,12 @@ export default function AdminPage() {
         if (response.ok) {
           const data = await response.json();
           if (data.success) {
-            alert('Produto excluído e MongoDB atualizado com sucesso!');
+            alert('Produto excluído com sucesso!');
           } else {
-            alert('Erro ao atualizar MongoDB: ' + data.error);
+            alert('Erro ao excluir produto: ' + data.error);
           }
         } else {
-          alert('Erro ao atualizar MongoDB');
+          alert('Erro ao excluir produto');
         }
       } catch (error) {
         console.error('Erro ao excluir produto:', error);
@@ -350,7 +350,7 @@ export default function AdminPage() {
   };
 
   const handleAddProduct = async () => {
-    if (newProduct.name && newProduct.description && newProduct.price) {
+    if (newProduct.name && newProduct.description) {
       try {
         // Criar produto com formato correto para MongoDB
         const productForMongo = {
@@ -381,7 +381,7 @@ export default function AdminPage() {
           id: Date.now().toString(),
           name: newProduct.name,
           description: newProduct.description,
-          price: newProduct.price,
+          price: newProduct.price ?? 0,
           category: newProduct.category as 'flores' | 'ceramica',
           image: newProduct.image || '/images/placeholder.jpg',
           available: newProduct.available || false,
@@ -430,12 +430,12 @@ export default function AdminPage() {
         if (response.ok) {
           const data = await response.json();
           if (data.success) {
-            alert('Produto adicionado e MongoDB atualizado com sucesso!');
+            alert('Produto adicionado com sucesso!');
           } else {
-            alert('Erro ao guardar no MongoDB: ' + data.error);
+            alert('Erro ao adicionar produto: ' + data.error);
           }
         } else {
-          alert('Erro ao guardar produto no MongoDB');
+          alert('Erro ao adicionar produto');
         }
         
         // Limpar formulário
@@ -676,10 +676,19 @@ export default function AdminPage() {
                         <input
                           type="number"
                           step="0.01"
-                          value={newProduct.price}
-                          onChange={(e) => setNewProduct(prev => ({ ...prev, price: parseFloat(e.target.value) }))}
+                          value={newProduct.price === null ? '' : newProduct.price}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setNewProduct(prev => ({ 
+                              ...prev, 
+                              price: value === '' ? 0 : parseFloat(value) 
+                            }));
+                          }}
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
                         />
+                        <p className="text-xs text-gray-500 mt-1">
+                          💡 Se colocar 0 ou deixar vazio, aparecerá "Preço sob consulta" no site
+                        </p>
                       </div>
                       
                       <div>
@@ -799,7 +808,7 @@ export default function AdminPage() {
                             </span>
                           </td>
                           <td className="py-3 px-4">
-                            € {product.price.toFixed(2).replace('.', ',')}
+                            {product.price === null ? 'Preço sob consulta' : `€ ${product.price.toFixed(2).replace('.', ',')}`}
                           </td>
                           <td className="py-3 px-4">
                             <div className="space-y-1">
@@ -865,10 +874,19 @@ export default function AdminPage() {
                           <input
                             type="number"
                             step="0.01"
-                            value={editingProduct.price}
-                            onChange={(e) => setEditingProduct(prev => prev ? { ...prev, price: parseFloat(e.target.value) } : null)}
+                            value={editingProduct.price === null ? '' : editingProduct.price}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              setEditingProduct(prev => prev ? { 
+                                ...prev, 
+                                price: value === '' ? 0 : parseFloat(value) 
+                              } : null);
+                            }}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
                           />
+                          <p className="text-xs text-gray-500 mt-1">
+                            💡 Se colocar 0 ou deixar vazio, aparecerá "Preço sob consulta" no site
+                          </p>
                         </div>
                         
                         <div>

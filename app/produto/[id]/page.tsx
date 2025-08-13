@@ -11,6 +11,7 @@ import Footer from '@/components/Footer';
 import ImageGallery from '@/components/ImageGallery';
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { ArrowLeft, ShoppingBag, Phone, MessageCircle, Heart, Star } from 'lucide-react';
+import { formatPrice } from '@/lib/utils';
 
 export default function ProductDetailPage() {
   const { addToFavorites, removeFromFavorites, isFavorite, favoriteProducts } = useFavorites();
@@ -92,13 +93,6 @@ export default function ProductDetailPage() {
     .filter(p => p.category === product.category && p.id !== product.id)
     .slice(0, 3);
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('pt-PT', {
-      style: 'currency',
-      currency: 'EUR'
-    }).format(price);
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Header 
@@ -161,8 +155,12 @@ export default function ProductDetailPage() {
             <div className="border-t border-gray-200 pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-2xl font-bold text-primary-600">
-                    {formatPrice(product.price)}
+                  <span className={`font-bold ${
+                    formatPrice(product.price).isConsultation 
+                      ? 'text-lg text-gray-500 font-normal' 
+                      : 'text-2xl text-primary-600'
+                  }`}>
+                    {formatPrice(product.price).text}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -227,7 +225,13 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="flex justify-between">
                   <span>Preço:</span>
-                  <span className="font-medium">{formatPrice(product.price)}</span>
+                  <span className={`font-medium ${
+                    formatPrice(product.price).isConsultation 
+                      ? 'text-sm text-gray-500' 
+                      : 'text-gray-900'
+                  }`}>
+                    {formatPrice(product.price).text}
+                  </span>
                 </div>
               </div>
             </div>
@@ -257,8 +261,12 @@ export default function ProductDetailPage() {
                     <h3 className="font-semibold text-gray-900 mb-2">{relatedProduct.name}</h3>
                     <p className="text-sm text-gray-600 mb-2 line-clamp-2">{relatedProduct.description}</p>
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-primary-600">
-                        {formatPrice(relatedProduct.price)}
+                      <span className={`font-bold ${
+                        formatPrice(relatedProduct.price).isConsultation 
+                          ? 'text-sm text-gray-500 font-normal' 
+                          : 'text-primary-600'
+                      }`}>
+                        {formatPrice(relatedProduct.price).text}
                       </span>
                       {relatedProduct.featured && (
                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">

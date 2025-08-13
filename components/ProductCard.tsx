@@ -6,6 +6,7 @@ import { Product } from '@/types';
 import { ShoppingBag, Eye, Heart } from 'lucide-react';
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { useAdminSettings } from '@/hooks/useAdminSettings';
+import { formatPrice } from '@/lib/utils';
 
 interface ProductCardProps {
   product: Product;
@@ -16,13 +17,6 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { adminSettings } = useAdminSettings();
   
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('pt-PT', {
-      style: 'currency',
-      currency: 'EUR'
-    }).format(price);
-  };
-
   const handleFavoriteToggle = () => {
     if (isFavorite(product.id)) {
       removeFromFavorites(product.id);
@@ -56,9 +50,13 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
         <p className="text-gray-600 text-sm mb-4 line-clamp-2 text-center lg:text-left">{product.description}</p>
         
                   <div className="flex items-center justify-between">
-            <span className="text-xl font-bold text-primary-600">
-              {formatPrice(product.price)}
-            </span>
+                    <span className={`font-bold ${
+                      formatPrice(product.price).isConsultation 
+                        ? 'text-sm text-gray-500 font-normal' 
+                        : 'text-xl text-primary-600'
+                    }`}>
+                      {formatPrice(product.price).text}
+                    </span>
             
             <div className="flex space-x-2">
               <button
