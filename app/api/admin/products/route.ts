@@ -92,7 +92,7 @@ export async function GET() {
       }
     });
   } catch (error) {
-    console.error('Erro ao ler produtos:', error);
+    
     return NextResponse.json(
       { error: 'Erro ao ler produtos' },
       { status: 500 }
@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
 
     const { products } = await request.json();
     
-    console.log('🔍 API recebeu produtos:', JSON.stringify(products, null, 2));
+    
     
     await dbConnect();
     
@@ -133,10 +133,7 @@ export async function POST(request: NextRequest) {
     
     // Criar novos produtos
     for (const productData of products) {
-      console.log('🔍 Processando produto:', productData.name);
-      console.log('🔍 Imagens recebidas:', productData.images);
-      console.log('🔍 Tipo de images:', typeof productData.images);
-      console.log('🔍 É array?', Array.isArray(productData.images));
+      
       
       const product = new Product({
         name: productData.name,
@@ -150,8 +147,7 @@ export async function POST(request: NextRequest) {
         specifications: productData.specifications || {}
       });
       
-      console.log('🔍 Criando produto:', productData.name);
-      console.log('🔍 Com imagens:', productData.images);
+      
       
       await product.save();
     }
@@ -162,7 +158,7 @@ export async function POST(request: NextRequest) {
       lastUpdated: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Erro ao guardar produtos:', error);
+    
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

@@ -26,7 +26,7 @@ export default function ProductsPage() {
           setProducts(productsData);
         }
       } catch (error) {
-        console.error('Erro ao carregar produtos:', error);
+  
       } finally {
         setIsLoadingProducts(false);
       }

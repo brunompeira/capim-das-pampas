@@ -42,7 +42,7 @@ export default function Home() {
           }
         }
       } catch (error) {
-        console.error('Erro ao verificar status de construção:', error);
+  
       }
     };
 
@@ -59,7 +59,7 @@ export default function Home() {
           setProducts(productsData);
         }
       } catch (error) {
-        console.error('Erro ao carregar produtos:', error);
+  
       } finally {
         setIsLoadingProducts(false);
       }

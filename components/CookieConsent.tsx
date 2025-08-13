@@ -23,7 +23,7 @@ export default function CookieConsent() {
   const handleAccept = () => {
     localStorage.setItem('cookieConsent', 'accepted');
     setIsVisible(false);
-    console.log('✅ Cookies aceites');
+    
   };
 
 

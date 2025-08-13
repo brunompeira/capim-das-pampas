@@ -254,7 +254,7 @@ export default function PrivacyPolicyPage() {
                  // Esconder o banner
                  const banner = document.getElementById('cookie-banner-privacy-fixed');
                  if (banner) banner.style.display = 'none';
-                 console.log('✅ Cookies aceites na política de privacidade');
+         
                }}
                className="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors whitespace-nowrap"
                id="cookie-banner-privacy-fixed"

@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
       await Address.deleteMany({
         _id: { $nin: remainingAddressIds }
       });
-      console.log('🗑️ Endereços removidos apagados da BD');
+      
     }
 
     // Atualizar ou criar endereços restantes

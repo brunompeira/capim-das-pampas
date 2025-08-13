@@ -40,10 +40,10 @@ export default function ProductDetailPage() {
           const foundProduct = data.find((p: Product) => p.id === productId);
           setProduct(foundProduct || null);
         } else {
-          console.error('Erro ao carregar produtos');
+    
         }
       } catch (error) {
-        console.error('Erro ao carregar produtos:', error);
+  
       } finally {
         setIsLoading(false);
       }
