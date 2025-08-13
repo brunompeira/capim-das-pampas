@@ -1,8 +1,11 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '@/types';
 import { ShoppingBag, Eye, Heart } from 'lucide-react';
 import { useFavorites } from '@/contexts/FavoritesContext';
+import { useAdminSettings } from '@/hooks/useAdminSettings';
 
 interface ProductCardProps {
   product: Product;
@@ -11,6 +14,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, onViewDetails }: ProductCardProps) {
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
+  const { adminSettings } = useAdminSettings();
   
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('pt-PT', {
@@ -78,7 +82,7 @@ export default function ProductCard({ product, onViewDetails }: ProductCardProps
               </Link>
               
                               <a
-                href={`https://wa.me/351912345678?text=Olá! Gostaria de saber mais sobre ${product.name}`}
+                href={`https://wa.me/${adminSettings.whatsapp.replace(/\D/g, '')}?text=Olá! Gostaria de saber mais sobre ${product.name}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 bg-primary-600 text-white rounded-full hover:bg-primary-700 transition-colors"
