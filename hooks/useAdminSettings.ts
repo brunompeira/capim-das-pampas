@@ -34,16 +34,40 @@ export const useAdminSettings = () => {
       }
     };
 
-    // Carregar configurações iniciais
+    // Carregar configurações apenas uma vez ao montar o componente
     loadSettings();
 
-    // Polling para verificar mudanças (a cada 5 segundos)
-    const interval = setInterval(loadSettings, 5000);
-
-    return () => {
-      clearInterval(interval);
-    };
+    // REMOVIDO: Polling constante que estava a criar conexões MongoDB a cada 5 segundos
+    // Isso era a causa principal do problema de conexões a subir constantemente
+    
   }, []);
 
-  return { adminSettings, contactSettings, team, isLoading };
+  // Função para recarregar configurações manualmente quando necessário
+  const refreshSettings = async () => {
+    try {
+      const response = await fetch(`/api/admin/settings?t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setAdminSettings(data.siteSettings || defaultAdminSettings);
+        setContactSettings(data.contactSettings || defaultContactSettings);
+        setTeam(data.siteSettings?.team || defaultAdminSettings.team);
+      }
+    } catch (error) {
+      console.error('Erro ao recarregar configurações:', error);
+    }
+  };
+
+  return { 
+    adminSettings, 
+    contactSettings, 
+    team, 
+    isLoading, 
+    refreshSettings // Função para recarregar manualmente quando necessário
+  };
 };

@@ -16,11 +16,26 @@ const connectionOptions = {
   connectTimeoutMS: 10000, // 10 segundos
 };
 
+// Variável global para controlar o estado da conexão
+let isConnected = false;
+let connectionPromise: Promise<typeof mongoose> | null = null;
+
 async function dbConnect() {
   try {
+    // Se já estiver conectado, retornar a conexão existente
+    if (isConnected && mongoose.connection.readyState === 1) {
+      return mongoose.connection;
+    }
+
     // Se a conexão estiver ativa, usar ela
     if (mongoose.connection.readyState === 1) {
+      isConnected = true;
       return mongoose.connection;
+    }
+
+    // Se já existe uma conexão em andamento, aguardar
+    if (connectionPromise) {
+      return await connectionPromise;
     }
 
     // Configurações básicas do Mongoose
@@ -28,10 +43,30 @@ async function dbConnect() {
     mongoose.set('autoIndex', false);
     
     // Criar nova conexão
-    const connection = await mongoose.connect(MONGODB_URI!, connectionOptions);
+    connectionPromise = mongoose.connect(MONGODB_URI!, connectionOptions);
     
+    const connection = await connectionPromise;
+    
+    // Configurar listeners de eventos
+    mongoose.connection.on('connected', () => {
+      isConnected = true;
+      connectionPromise = null;
+    });
+
+    mongoose.connection.on('error', () => {
+      isConnected = false;
+      connectionPromise = null;
+    });
+
+    mongoose.connection.on('disconnected', () => {
+      isConnected = false;
+      connectionPromise = null;
+    });
+
     return connection;
   } catch (error) {
+    isConnected = false;
+    connectionPromise = null;
     throw error;
   }
 }

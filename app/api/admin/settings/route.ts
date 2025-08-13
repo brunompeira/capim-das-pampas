@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/config/dbConnect';
 import SiteSettings from '@/models/SiteSettings';
 import Address from '@/models/Address';
+import { getCacheHeaders } from '@/config/apiConfig';
 
 // GET - Ler configurações
 export async function GET() {
@@ -73,13 +74,10 @@ export async function GET() {
       }
     };
 
-    return NextResponse.json(formattedSettings, {
-      headers: {
-        'Cache-Control': 'no-store, no-cache, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-      }
-    });
+    // Usar headers de cache apropriados para evitar chamadas constantes
+    const headers = getCacheHeaders('/api/admin/settings');
+
+    return NextResponse.json(formattedSettings, { headers });
   } catch (error) {
     console.error('Erro ao ler configurações:', error);
     return NextResponse.json(
