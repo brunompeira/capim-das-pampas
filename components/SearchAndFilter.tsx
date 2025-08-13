@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Filter, X } from 'lucide-react';
+import { Search, Filter, X, ChevronUp, RotateCcw } from 'lucide-react';
 
 interface SearchAndFilterProps {
   searchTerm: string;
@@ -18,7 +18,7 @@ export default function SearchAndFilter({
   selectedCategory,
   setSelectedCategory,
   totalProducts,
-  filteredProducts
+  filteredProducts,
 }: SearchAndFilterProps) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
@@ -58,35 +58,47 @@ export default function SearchAndFilter({
           )}
         </div>
 
-        {/* Filter Button */}
-        <div className="flex items-center space-x-3">
-          <button
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className={`flex items-center px-5 py-3 rounded-lg transition-all duration-200 font-medium ${
-              isFilterOpen 
-                ? 'bg-primary-600 text-white shadow-lg shadow-primary-200' 
-                : 'bg-primary-50 text-primary-700 border border-primary-200 hover:bg-primary-100 hover:border-primary-300'
-            }`}
-          >
-            <Filter className="w-5 h-5 mr-2" />
-            Filtros
-          </button>
+                 {/* Filter Button */}
+         <div className="flex items-center space-x-3">
+           <button
+             onClick={() => setIsFilterOpen(!isFilterOpen)}
+             className={`flex items-center px-4 py-2.5 rounded-lg transition-all duration-200 font-medium ${
+               isFilterOpen 
+                 ? 'bg-primary-600 text-white shadow-lg shadow-primary-200' 
+                 : 'bg-primary-50 text-primary-700 border border-primary-200 hover:bg-primary-100 hover:border-primary-300'
+             }`}
+           >
+             <Filter className="w-4 h-4 mr-2" />
+             Filtros
+           </button>
 
-          {hasActiveFilters && (
-            <button
-              onClick={clearFilters}
-              className="flex items-center px-4 py-3 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-all duration-200"
-            >
-              <X className="w-4 h-4 mr-2" />
-              Limpar
-            </button>
-          )}
-        </div>
+           {hasActiveFilters && (
+             <button
+               onClick={clearFilters}
+               className="flex items-center px-5 py-3 text-gray-500 hover:text-gray-700 hover:bg-gray-50 border border-gray-200 hover:border-gray-300 rounded-lg transition-all duration-200 text-sm font-medium"
+             >
+               <RotateCcw className="w-4 h-4 mr-2" />
+               Limpar
+             </button>
+           )}
+         </div>
       </div>
 
       {/* Filter Panel */}
       {isFilterOpen && (
         <div className="mt-6 pt-6 border-t border-gray-100">
+          {/* Header do painel de filtros com botão de minimizar */}
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">Filtros</h3>
+            <button
+              onClick={() => setIsFilterOpen(false)}
+              className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-50 text-primary-600 hover:bg-primary-100 hover:text-primary-700 border border-primary-200 transition-all duration-200"
+              title="Minimizar filtros"
+            >
+              <ChevronUp className="w-4 h-4" />
+            </button>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-3">
@@ -95,14 +107,25 @@ export default function SearchAndFilter({
               <div className="space-y-2">
                 {categories.map((category) => (
                   <label key={category.value} className="flex items-center cursor-pointer group">
-                    <input
-                      type="radio"
-                      name="category"
-                      value={category.value}
-                      checked={selectedCategory === category.value}
-                      onChange={(e) => setSelectedCategory(e.target.value as 'todos' | 'flores' | 'ceramica')}
-                      className="w-4 h-4 text-primary-600 border-gray-300 focus:ring-primary-500 focus:ring-2"
-                    />
+                    <div className="relative">
+                      <input
+                        type="radio"
+                        name="category"
+                        value={category.value}
+                        checked={selectedCategory === category.value}
+                        onChange={(e) => setSelectedCategory(e.target.value as 'todos' | 'flores' | 'ceramica')}
+                        className="sr-only"
+                      />
+                                             <div className={`w-4 h-4 border-2 rounded-full flex items-center justify-center ${
+                         selectedCategory === category.value 
+                           ? 'border-amber-800 bg-amber-800' 
+                           : 'border-gray-300'
+                       }`}>
+                        {selectedCategory === category.value && (
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                        )}
+                      </div>
+                    </div>
                     <span className="ml-3 text-sm text-gray-700 group-hover:text-primary-600 transition-colors">
                       {category.label}
                     </span>
@@ -129,20 +152,20 @@ export default function SearchAndFilter({
               <label className="block text-sm font-semibold text-gray-900 mb-3">
                 Ações Rápidas
               </label>
-              <div className="space-y-2">
-                <button
-                  onClick={() => setSelectedCategory('flores')}
-                  className="block w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 rounded-lg transition-all duration-200 border border-transparent hover:border-primary-200"
-                >
-                  Ver apenas flores
-                </button>
-                <button
-                  onClick={() => setSelectedCategory('ceramica')}
-                  className="block w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 rounded-lg transition-all duration-200 border border-transparent hover:border-primary-200"
-                >
-                  Ver apenas cerâmica
-                </button>
-              </div>
+                             <div className="space-y-1">
+                 <button
+                   onClick={() => setSelectedCategory('flores')}
+                   className="block w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 rounded-lg transition-all duration-200 border border-transparent hover:border-primary-200"
+                 >
+                   Ver apenas flores
+                 </button>
+                 <button
+                   onClick={() => setSelectedCategory('ceramica')}
+                   className="block w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 rounded-lg transition-all duration-200 border border-transparent hover:border-primary-200"
+                 >
+                   Ver apenas cerâmica
+                 </button>
+               </div>
             </div>
           </div>
         </div>
