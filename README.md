@@ -70,11 +70,11 @@ Edite o arquivo `data/siteConfig.ts`:
 export const siteConfig: SiteConfig = {
   name: 'Sua Empresa',
   description: 'Sua descrição',
-  contact: {
-    phone: 'Seu telefone',
-    whatsapp: 'Seu WhatsApp',
-    email: 'seu@email.com',
-    address: 'Seu endereço',
+     contact: {
+     phone: 'Seu telefone',
+     whatsapp: 'Seu WhatsApp',
+     email: 'capimdaspampas@gmail.com',
+     address: 'Seu endereço',
     instagram: '@seuinstagram',
     facebook: 'Sua página do Facebook',
   },
@@ -216,8 +216,8 @@ CapimDasPampas/
 ## 🤝 Suporte
 
 Para dúvidas ou suporte:
-- Email: contato@capimdaspampas.com.br
-- WhatsApp: (11) 99999-9999
+- Email: capimdaspampas@gmail.com
+- WhatsApp: +351 934 305 372
 
 ## 📄 Licença
 

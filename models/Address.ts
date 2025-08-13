@@ -8,7 +8,7 @@ const openingHoursSchema = new mongoose.Schema({
 
 const addressSchema = new mongoose.Schema({
   name: { type: String, required: true, default: 'Loja Principal' },
-  address: { type: String, required: true, default: 'Rua das Flores, 123 - 1000-001 Lisboa, Portugal' },
+  address: { type: String, required: true, default: 'Florista Capim das Pampas, R. da Igreja 26' },
   coordinates: {
     type: [Number], // [latitude, longitude]
     default: [38.7223, -9.1393] // Coordenadas de Lisboa

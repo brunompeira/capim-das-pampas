@@ -19,9 +19,8 @@ export async function GET() {
         phone: '+351 934 305 372',
         whatsapp: '+351 934 305 372',
         team: [
-          { id: '1', name: 'Maria Silva', photo: '' },
-          { id: '2', name: 'João Santos', photo: '' },
-          { id: '3', name: 'Ana Costa', photo: '' }
+          { id: '1', name: 'Daniela Martins', photo: '' },
+          { id: '2', name: 'Rui Loureiro', photo: '' }
         ]
       });
       
@@ -35,7 +34,7 @@ export async function GET() {
       // Criar endereço padrão se não existir
       const defaultAddress = new Address({
         name: 'Loja Principal',
-        address: 'Rua das Flores, 123 - 1000-001 Lisboa, Portugal',
+        address: 'Florista Capim das Pampas, R. da Igreja 26',
         coordinates: [38.7223, -9.1393],
         openingHours: {
           monday: { open: '08:00', close: '18:00', closed: false },

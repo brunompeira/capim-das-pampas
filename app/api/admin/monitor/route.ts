@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getConnectionStatus } from '@/config/mongooseConfig';
+import { getConnectionStatus } from '@/config/mongoConfig';
 
 // GET - Monitorizar estado das conexões MongoDB
 export async function GET() {

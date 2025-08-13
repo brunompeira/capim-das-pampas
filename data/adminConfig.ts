@@ -45,10 +45,10 @@ export interface AdminSiteSettings {
 // Configurações padrão que serão usadas se não houver configurações salvas
 export const defaultAdminSettings: AdminSiteSettings = {
   name: 'Capim das Pampas',
-  email: 'contacto@capimdaspampas.pt',
-  phone: '+351 912 345 678',
-  whatsapp: '+351 912 345 678',
-  address: 'Rua das Flores, 123 - 1000-001 Lisboa, Portugal',
+  email: 'capimdaspampas@gmail.com',
+  phone: '+351 934 305 372',
+  whatsapp: '+351 934 305 372',
+  address: 'Florista Capim das Pampas, R. da Igreja 26',
   openingHours: {
     monday: { open: '08:00', close: '18:00', closed: false },
     tuesday: { open: '08:00', close: '18:00', closed: false },
@@ -59,20 +59,19 @@ export const defaultAdminSettings: AdminSiteSettings = {
     sunday: { open: '10:00', close: '16:00', closed: true },
   },
   team: [
-    { id: '1', name: 'Maria Silva', photo: '' },
-    { id: '2', name: 'João Santos', photo: '' },
-    { id: '3', name: 'Ana Costa', photo: '' }
+    { id: '1', name: 'Daniela Martins', photo: '' },
+    { id: '2', name: 'Rui Loureiro', photo: '' }
   ]
 };
 
 export const defaultContactSettings: AdminContactSettings = {
-  phone: '+351 912 345 678',
-  email: 'contacto@capimdaspampas.pt',
+  phone: '+351 934 305 372',
+  email: 'capimdaspampas@gmail.com',
   addresses: [
     {
       id: '1',
       name: 'Loja Principal',
-      address: 'Rua das Flores, 123 - 1000-001 Lisboa, Portugal',
+      address: 'Florista Capim das Pampas, R. da Igreja 26',
       openingHours: {
         monday: { open: '08:00', close: '18:00', closed: false },
         tuesday: { open: '08:00', close: '18:00', closed: false },
